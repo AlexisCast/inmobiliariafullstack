@@ -11,7 +11,7 @@ import theme from "./theme/theme";
 import AppNavbar from "./componentes/layout/AppNavbar";
 import ListaInmuebles from "./componentes/vistas/ListaInmuebles";
 import RegistrarUsuario from "./componentes/seguridad/RegistrarUsuario";
-
+import Login from './componentes/seguridad/Login';
 
 export default class App extends Component {
 	render() {
@@ -26,6 +26,11 @@ export default class App extends Component {
 								path="/auth/registrarUsuario"
 								exact
 								component={RegistrarUsuario}
+							/>
+							<Route
+								path="/auth/login"
+								exact
+								component={Login}
 							/>
 						</Switch>
 					</Grid>
