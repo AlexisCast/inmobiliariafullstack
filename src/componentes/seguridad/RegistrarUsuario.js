@@ -7,7 +7,9 @@ import {
 	TextField,
 	Button,
 } from "@material-ui/core";
+import { compose } from "recompose";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import { consumerFirebase } from "../../server";
 
 const style = {
 	paper: {
@@ -30,8 +32,16 @@ const style = {
 	},
 };
 
-export default class RegistrarUsuario extends Component {
+const usuarioInicial = {
+	nombre: "",
+	apellido: "",
+	email: "",
+	password: "",
+};
+
+class RegistrarUsuario extends Component {
 	state = {
+		firebase: null,
 		usuario: {
 			nombre: "",
 			apellido: "",
@@ -39,6 +49,15 @@ export default class RegistrarUsuario extends Component {
 			password: "",
 		},
 	};
+
+	static getDerivedStateFromProps(nextProps, prevState) {
+		if (nextProps.firebase === prevState.firebase) {
+			return null;
+		}
+		return {
+			firebase: nextProps.firebase,
+		};
+	}
 
 	onChange = (e) => {
 		// cloning object
@@ -56,6 +75,20 @@ export default class RegistrarUsuario extends Component {
 	registrarUsuario = (e) => {
 		e.preventDefault();
 		console.log("imprimir objeto usuario state", this.state.usuario);
+		const { usuario, firebase } = this.state;
+
+		firebase.db
+			.collection("Users")
+			.add(usuario)
+			.then((usuarioAfter) => {
+				console.log("esta insercion fue un exito".usuarioAfter);
+				this.setState({
+					usuario: usuarioInicial,
+				});
+			})
+			.catch((error) => {
+				console.log("error", error);
+			});
 	};
 
 	render() {
@@ -129,3 +162,4 @@ export default class RegistrarUsuario extends Component {
 		);
 	}
 }
+export default compose(consumerFirebase)(RegistrarUsuario);
