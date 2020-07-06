@@ -13,8 +13,7 @@ import ListaInmuebles from "./componentes/vistas/ListaInmuebles";
 import RegistrarUsuario from "./componentes/seguridad/RegistrarUsuario";
 import Login from './componentes/seguridad/Login';
 
-export default class App extends Component {
-	render() {
+function App (props){
 		return (
 			<Router>
 				<MuiThemeProvider theme={theme}>
@@ -37,5 +36,7 @@ export default class App extends Component {
 				</MuiThemeProvider>
 			</Router>
 		);
-	}
+
 }
+
+export default App;
