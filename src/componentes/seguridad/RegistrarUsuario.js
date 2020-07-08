@@ -11,6 +11,10 @@ import { compose } from "recompose";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { consumerFirebase } from "../../server";
 
+import { crearUsuario } from "../../sesion/actions/sesionAction";
+import { openMensajePantalla } from "../../sesion/actions/snackbarAction";
+import { StateContext } from "../../sesion/store";
+
 const style = {
 	paper: {
 		marginTop: 8,
@@ -40,6 +44,8 @@ const usuarioInicial = {
 };
 
 class RegistrarUsuario extends Component {
+	static contextType = StateContext;
+
 	state = {
 		firebase: null,
 		usuario: {
@@ -72,7 +78,26 @@ class RegistrarUsuario extends Component {
 		);
 	};
 
-	registrarUsuario = (e) => {
+	registrarUsuario = async (e) => {
+		e.preventDefault();
+		console.log("imprimir objeto usuario state", this.state.usuario);
+		const [{ sesion }, dispatch] = this.context;
+		const { firebase, usuario } = this.state;
+
+		let callback = await crearUsuario(dispatch, firebase, usuario);
+		if (callback.status) {
+			this.props.history.push("/");
+		} else {
+			openMensajePantalla(dispatch, {
+				open: true,
+				mensaje: callback.mensaje.message,
+			});
+		}
+	};
+
+	/**
+	 * ! works without actions 
+	 * registrarUsuario = (e) => {
 		e.preventDefault();
 		console.log("imprimir objeto usuario state", this.state.usuario);
 		const { usuario, firebase } = this.state;
@@ -106,6 +131,7 @@ class RegistrarUsuario extends Component {
 				console.log("error", error);
 			});
 	};
+	 * */
 
 	render() {
 		return (

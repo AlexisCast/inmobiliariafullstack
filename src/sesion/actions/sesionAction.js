@@ -52,11 +52,12 @@ export const crearUsuario = (dispatch, firebase, usuario) => {
 							sesion: usuario,
 							autenticado: true,
 						});
-						resolve();
+						resolve({ status: true });
 					});
 			})
 			.catch((error) => {
 				console.log("error", error);
+				resolve({ status: false, mensaje: error });
 			});
 	});
 };
