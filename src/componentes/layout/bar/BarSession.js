@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Toolbar, Typography, Button, IconButton } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import {consumerFirebase} from '../../../server'
+import {compose} from 'recompose'
 
 const styles = (theme) => ({
 	sectionDesktop: {
@@ -47,4 +49,4 @@ class BarSession extends Component {
 	}
 }
 
-export default withStyles(styles)(BarSession);
+export default compose(consumerFirebase, withStyles(styles))(BarSession);
