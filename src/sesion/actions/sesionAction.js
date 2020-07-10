@@ -3,15 +3,12 @@ export const iniciarSesion = (dispatch, firebase, email, password) => {
 		firebase.auth
 			.signInWithEmailAndPassword(email, password)
 			.then((auth) => {
-				//auth.user.uid
 				firebase.db
 					.collection("Users")
 					.doc(auth.user.uid)
 					.get()
 					.then((doc) => {
 						const usuarioDB = doc.data();
-
-						// to the sesionReducer
 						dispatch({
 							type: "INICIAR_SESION",
 							sesion: usuarioDB,
@@ -46,7 +43,6 @@ export const crearUsuario = (dispatch, firebase, usuario) => {
 					)
 					.then((doc) => {
 						usuario.id = auth.user.uid;
-						// to the sesionReducer
 						dispatch({
 							type: "INICIAR_SESION",
 							sesion: usuario,
@@ -61,6 +57,7 @@ export const crearUsuario = (dispatch, firebase, usuario) => {
 			});
 	});
 };
+
 export const salirSesion = (dispatch, firebase) => {
 	return new Promise((resolve, eject) => {
 		firebase.auth.signOut().then((salir) => {

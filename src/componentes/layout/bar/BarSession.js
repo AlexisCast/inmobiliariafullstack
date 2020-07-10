@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
 import {
 	Toolbar,
 	Typography,
@@ -8,16 +7,17 @@ import {
 	Drawer,
 	Avatar,
 } from "@material-ui/core";
-import {Link} from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
 import { consumerFirebase } from "../../../server";
-import { compose } from "recompose";
+import { compose, fromRenderProps } from "recompose";
 import { StateContext } from "../../../sesion/store";
-
+import { salirSesion } from "../../../sesion/actions/sesionAction";
 import { MenuDerecha } from "./menuDerecha";
 import { MenuIzquierda } from "./menuIzquierda";
+import { Link } from "react-router-dom";
 import fotoUsuarioTemp from "../../../logo.svg";
-import { salirSesion } from "../../../sesion/actions/sesionAction";
+import { withRouter } from "react-router-dom";
+// import { obtenerPermisoNotification } from "../../../sesion/actions/notificationAction";
 
 const styles = (theme) => ({
 	sectionDesktop: {
@@ -74,18 +74,30 @@ class BarSession extends Component {
 	};
 	static getDerivedStateFromProps(nextProps, prevState) {
 		let nuevosObjetos = {};
-
+	
 		if (nextProps.firebase !== prevState.firebase) {
-			nuevosObjetos.firebase = nextProps.firebase;
+		  nuevosObjetos.firebase = nextProps.firebase;
 		}
+	
 		return nuevosObjetos;
-	}
+	  }
 	render() {
 		const { classes } = this.props;
 		const [{ sesion }, dispatch] = this.context;
 		const { usuario } = sesion;
-		console.log("usuario", sesion);
+	
+		const { firebase } = this.state;
+	
+		if(!usuario){
+		  salirSesion(dispatch, firebase).then(success => {
+			this.props.history.push("/auth/login");
+		  });
+		}
+	
 		let textoUsuario = usuario.nombre + " " + usuario.apellido;
+		if(!usuario.nombre){
+		  textoUsuario = usuario.telefono;
+		}
 
 		return (
 			<div>
@@ -135,13 +147,11 @@ class BarSession extends Component {
 						<IconButton color="inherit" component={Link} to="">
 							<i className="material-icons">mail_outline</i>
 						</IconButton>
-						<Button color='inherit' onClick={this.salirSesionApp}>
+						<Button color="inherit" onClick={this.salirSesionApp}>
 							Salir
 						</Button>
 						<Button color="inherit">{textoUsuario}</Button>
-						<Avatar
-							src={fotoUsuarioTemp}
-						></Avatar>
+						<Avatar src={fotoUsuarioTemp}></Avatar>
 					</div>
 					{/* Mobile use */}
 					<div className={classes.sectionMobile}>
