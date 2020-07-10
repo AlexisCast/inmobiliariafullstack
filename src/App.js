@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { Grid, Snackbar } from "@material-ui/core";
@@ -17,6 +17,7 @@ import { FirebaseContext } from "./server";
 
 import { useStateValue } from "./sesion/store";
 import openSnackbarReducer from "./sesion/reducers/openSnackBarReducer";
+import RutaAutenticada from "./componentes/seguridad/RutaAutenticada";
 
 function App(props) {
 	let firebase = React.useContext(FirebaseContext);
@@ -26,12 +27,12 @@ function App(props) {
 	//comes from reducer/index
 	const [{ openSnackbar }, dispatch] = useStateValue();
 
-	React.useEffect(() => {
+	useEffect(() => {
 		firebase.estaIniciado().then((val) => {
 			setupFirebaseInicial(val);
 			console.log("val", val);
 		});
-	}, []);
+	});
 
 	return autenticacionIniciada !== false ? (
 		<React.Fragment>
@@ -62,7 +63,13 @@ function App(props) {
 					<AppNavbar />
 					<Grid container>
 						<Switch>
-							<Route path="/" exact component={ListaInmuebles} />
+							{/* <Route path="/" exact component={ListaInmuebles} /> */}
+							<RutaAutenticada
+								exact
+								path="/"
+								autenticadoFirebase={firebase.auth.currentUser}
+								component={ListaInmuebles}
+							/>
 							<Route
 								path="/auth/registrarUsuario"
 								exact

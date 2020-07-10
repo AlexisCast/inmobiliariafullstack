@@ -22,7 +22,7 @@ class Firebase {
 		this.auth = app.auth();
 	}
 	estaIniciado() {
-		return new Promise((resolve) => {
+		return new Promise(resolve => {
 			this.auth.onAuthStateChanged(resolve);
 		});
 	}
