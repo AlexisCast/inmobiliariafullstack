@@ -6,6 +6,7 @@ import { compose } from "recompose";
 
 import { consumerFirebase } from "../../server";
 import { StateContext } from "../../sesion/store";
+import {salirSesion} from '../../sesion/actions/sesionAction'
 
 import theme from "../../theme/theme";
 

@@ -4,14 +4,14 @@ import "firebase/auth";
 
 
 const config = {
-    apiKey: "AIzaSyA9tJg61u6LuQzul05Y9k3moDj_iRh0CBg",
-    authDomain: "rhfirematdes-fullstackextremo.firebaseapp.com",
-    databaseURL: "https://rhfirematdes-fullstackextremo.firebaseio.com",
-    projectId: "rhfirematdes-fullstackextremo",
-    storageBucket: "rhfirematdes-fullstackextremo.appspot.com",
-    messagingSenderId: "729274428358",
-    appId: "1:729274428358:web:50bad628dcb2a1c9b7a0c7",
-    measurementId: "G-QTWWFDE1BX",
+    apiKey: process.env.REACT_APP_API_KEY,
+    authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+    databaseURL: process.env.REACT_APP_DATABASE_URL,
+    projectId: process.env.REACT_APP_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_MESSAGING_APP_ID,
+    measurementId:process.env.REACT_APP_MESSAGING_MEASUREMENT_ID
 };
 
 
@@ -29,4 +29,3 @@ class Firebase {
 }
 
 export default Firebase;
-//test 123
