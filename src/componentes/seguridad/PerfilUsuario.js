@@ -8,7 +8,10 @@ import {
 	Avatar,
 	Button,
 } from "@material-ui/core";
+
 import reactFoto from "../../logo.svg";
+import { openMensajePantalla } from "../../sesion/actions/snackbarAction";
+
 import { consumerFirebase } from "../../server";
 
 const style = {
@@ -46,6 +49,48 @@ const PerfilUsuario = (props) => {
 		foto: "",
 	});
 
+	const cambiarDato = (e) => {
+		const { name, value } = e.target;
+		cambiarEstado((prev) => ({
+			...prev,
+			[name]: value,
+		}));
+	};
+	const guardarCambios = (e) => {
+		e.preventDefault();
+
+		firebase.db
+			.collection("Users")
+			.doc(firebase.auth.currentUser.uid)
+			.set(estado, { merge: true })
+			.then((success) => {
+				dispatch({
+					type: "INICIAR_SESION",
+					sesion: estado,
+					autenticado: true,
+				});
+
+				openMensajePantalla(dispatch, {
+					open: true,
+					mensaje: "Se guardaron los cambios",
+				});
+			})
+			.catch((error) => {
+				openMensajePantalla(dispatch, {
+					open: true,
+					mensaje: "Errores guardando en la base de datos:" + error,
+				});
+			});
+	};
+
+	useEffect(() => {
+		if (estado.id === "") {
+			if (sesion) {
+				cambiarEstado(sesion.usuario);
+			}
+		}
+	});
+
 	return sesion ? (
 		<Container component="main" maxWidth="md" justify="center">
 			<div style={style.paper}>
@@ -61,6 +106,8 @@ const PerfilUsuario = (props) => {
 								variant="outlined"
 								fullWidth
 								label="Nombre"
+								value={estado.nombre}
+								onChange={cambiarDato}
 							/>
 						</Grid>
 						<Grid item xs={12} md={6}>
@@ -69,6 +116,8 @@ const PerfilUsuario = (props) => {
 								variant="outlined"
 								fullWidth
 								label="Apellidos"
+								value={estado.apellido}
+								onChange={cambiarDato}
 							/>
 						</Grid>
 						<Grid item xs={12} md={6}>
@@ -77,6 +126,8 @@ const PerfilUsuario = (props) => {
 								variant="outlined"
 								fullWidth
 								label="E-Mail"
+								value={estado.email}
+								onChange={cambiarDato}
 							/>
 						</Grid>
 						<Grid item xs={12} md={6}>
@@ -85,6 +136,8 @@ const PerfilUsuario = (props) => {
 								variant="outlined"
 								fullWidth
 								label="Telefono"
+								value={estado.telefono}
+								onChange={cambiarDato}
 							/>
 						</Grid>
 					</Grid>
@@ -97,6 +150,7 @@ const PerfilUsuario = (props) => {
 								size="large"
 								color="primary"
 								style={style.submit}
+								onClick={guardarCambios}
 							>
 								Guardar Cambios
 							</Button>
