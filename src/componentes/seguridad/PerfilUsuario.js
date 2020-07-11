@@ -11,8 +11,10 @@ import {
 
 import reactFoto from "../../logo.svg";
 import { openMensajePantalla } from "../../sesion/actions/snackbarAction";
-
+import ImageUploader from "react-images-upload";
 import { consumerFirebase } from "../../server";
+import { v4 as uuidv4 } from "uuid";
+
 
 const style = {
 	paper: {
@@ -91,6 +93,52 @@ const PerfilUsuario = (props) => {
 		}
 	});
 
+	const subirFoto = (fotos) => {
+		//1. Capturar la imagen
+		const foto = fotos[0];
+		//2. Renombrar la imagen
+		const claveUnicaFoto = uuidv4();
+		//3. Obtener el nombre de la foto
+		const nombreFoto = foto.name;
+		//4. Obtener la extension de la imagen
+		const extensionFoto = nombreFoto.split(".").pop();
+		//5. Crear el nuevo nombre de la foto - alias
+		const alias = (
+			nombreFoto.split(".")[0] +
+			"_" +
+			claveUnicaFoto +
+			"." +
+			extensionFoto
+		)
+			.replace(/\s/g, "_")
+			.toLowerCase();
+		// V a xI.jpg  --->  v_a_xi_423454354423324423.jpg
+
+		firebase.guardarDocumento(alias, foto).then((metadata) => {
+			firebase.devolverDocumento(alias).then((urlFoto) => {
+				estado.foto = urlFoto;
+
+				firebase.db
+					.collection("Users")
+					.doc(firebase.auth.currentUser.uid)
+					.set(
+						{
+							foto: urlFoto,
+						},
+						{ merge: true }
+					)
+					.then((userDB) => {
+						dispatch({
+							type: "INICIAR_SESION",
+							sesion: estado,
+							autenticado: true,
+						});
+					});
+			});
+		});
+	};
+
+    let fotoKey = uuid.v4();
 	return sesion ? (
 		<Container component="main" maxWidth="md" justify="center">
 			<div style={style.paper}>
@@ -138,6 +186,17 @@ const PerfilUsuario = (props) => {
 								label="Telefono"
 								value={estado.telefono}
 								onChange={cambiarDato}
+							/>
+						</Grid>
+						<Grid item xs={12} md={12}>
+							<ImageUploader
+								withIcon={false}
+								key={fotoKey}
+								singleImage={true}
+								buttonText="Seleccione su imagen de perfil"
+								onChange={subirFoto}
+								imgExtension={[".jpg", ".gif", ".png", ".jpeg"]}
+								maxFileSize={5242880}
 							/>
 						</Grid>
 					</Grid>

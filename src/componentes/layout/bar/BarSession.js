@@ -128,7 +128,7 @@ class BarSession extends Component {
 							classes={classes}
 							usuario={usuario}
 							textoUsuario={textoUsuario}
-							fotoUsuario={fotoUsuarioTemp}
+							fotoUsuario={usuario.foto||fotoUsuarioTemp}
 							salirSesion={this.salirSesionApp}
 						/>
 					</div>
@@ -151,7 +151,7 @@ class BarSession extends Component {
 							Salir
 						</Button>
 						<Button color="inherit">{textoUsuario}</Button>
-						<Avatar src={fotoUsuarioTemp}></Avatar>
+						<Avatar src={usuario.foto || fotoUsuarioTemp}></Avatar>
 					</div>
 					{/* Mobile use */}
 					<div className={classes.sectionMobile}>
