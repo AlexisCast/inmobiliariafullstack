@@ -138,7 +138,7 @@ const PerfilUsuario = (props) => {
 		});
 	};
 
-    let fotoKey = uuid.v4();
+    let fotoKey = uuidv4();
 	return sesion ? (
 		<Container component="main" maxWidth="md" justify="center">
 			<div style={style.paper}>
