@@ -18,6 +18,7 @@ import { FirebaseContext } from "./server";
 import { useStateValue } from "./sesion/store";
 import openSnackbarReducer from "./sesion/reducers/openSnackBarReducer";
 import RutaAutenticada from "./componentes/seguridad/RutaAutenticada";
+import PerfilUsuario from "./componentes/seguridad/PerfilUsuario";
 
 function App(props) {
 	let firebase = React.useContext(FirebaseContext);
@@ -69,6 +70,12 @@ function App(props) {
 								path="/"
 								autenticadoFirebase={firebase.auth.currentUser}
 								component={ListaInmuebles}
+							/>
+							<RutaAutenticada
+								exact
+								path="/auth/perfil"
+								autenticadoFirebase={firebase.auth.currentUser}
+								component={PerfilUsuario}
 							/>
 							<Route
 								path="/auth/registrarUsuario"

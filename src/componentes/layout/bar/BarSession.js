@@ -140,7 +140,7 @@ class BarSession extends Component {
 					>
 						<i className="material-icons">menu</i>
 					</IconButton>
-					<Typography variant="h6">VAXI HOMES</Typography>
+					<Typography variant="h6">VAXI HOMES{process.env.REACT_APP_NAMETEST}</Typography>
 					<div className={classes.grow}></div>
 					{/* Desktop use */}
 					<div className={classes.sectionDesktop}>
